@@ -1,0 +1,23 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+    min-width: 250px;
+    min-height: 150px;
+}
+.bodyContainer{
+    flex-grow: 1;
+}
+
+.title{
+    padding: 10px 30px;
+    background-color: #2F74B5;
+    color: white;
+    border-bottom: 1px solid rgb(138, 134, 134);
+}
+
+.eventAdd{
+    padding: 5px;
+    background-color: #444242;
+}

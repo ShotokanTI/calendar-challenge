@@ -1,0 +1,71 @@
+$calendarColor:#2F74B5;
+$bgColor:#F2F2F2;
+$colorOtherMonth:#CACACA;
+.app {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 400px;
+}
+
+
+.container-days{
+    display: flex;
+}
+
+.days-calendar-container{
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    div{
+        border-bottom: 1px solid black;
+        border-right: 1px solid black;
+        padding: 0.5rem 5rem 5rem 0.5rem;
+        font-weight: 700;
+        &:hover{
+            background-color: $calendarColor;
+            color: white;
+        }
+    }
+
+}
+
+.color-weekend{
+    color: $calendarColor;
+    background-color: $bgColor;
+}
+
+.otherMonthNotWeekend{
+    color: $colorOtherMonth;
+}
+
+.currentMonth{
+    color:black;
+}
+
+.otherMonth{
+    color: $colorOtherMonth;
+    background-color: $bgColor;
+}
+
+header{
+    background-color: $calendarColor;
+    color: white;
+    font-weight: 600;
+    display: flex;
+    span{
+        font-size: 16px;
+        padding-left: 10px;
+        padding-right: 20px;
+    }
+}
+
+.data-calendar{
+    display: flex;
+    flex-direction: column;
+    max-width: 110px;
+    min-width: 110px;
+    &:first-child{
+        border-left: 1px solid black;
+    }
+}
