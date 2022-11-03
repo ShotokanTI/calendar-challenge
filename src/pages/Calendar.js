@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import MenuUI from "../components/Menu";
+import MenuUI from "../components/reminders/Menu";
 import { store } from "../reducers";
 import { setData } from "../reducers/dateReducer";
 
