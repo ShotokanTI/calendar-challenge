@@ -1,4 +1,4 @@
-.container{
+.container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -6,18 +6,46 @@
     min-width: 250px;
     min-height: 150px;
 }
-.bodyContainer{
-    flex-grow: 1;
+
+.eventDetails{
+    &:hover{
+        background-color: whitesmoke;
+    }
 }
 
-.title{
+.bodyContainer {
+    overflow: auto;
+    max-height: 200px;
+    &::-webkit-scrollbar {
+        width: 5px;
+        height: 8px;
+        padding-top: 10px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(156, 155, 155);
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgb(156, 155, 155);
+    }
+}
+
+.title {
     padding: 10px 30px;
-    background-color: #2F74B5;
+    background-color: #2f74b5;
     color: white;
     border-bottom: 1px solid rgb(138, 134, 134);
 }
 
-.eventAdd{
+.eventAdd {
     padding: 5px;
     background-color: #444242;
 }

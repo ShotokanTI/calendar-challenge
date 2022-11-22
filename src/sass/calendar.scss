@@ -1,6 +1,6 @@
-$calendarColor:#2F74B5;
-$bgColor:#F2F2F2;
-$colorOtherMonth:#CACACA;
+$calendarColor: #2f74b5;
+$bgColor: #f2f2f2;
+$colorOtherMonth: #cacaca;
 .app {
     width: 100%;
     display: flex;
@@ -9,64 +9,108 @@ $colorOtherMonth:#CACACA;
     height: 100vh;
 }
 
-
-.container-days{
+.container-days {
     display: flex;
 }
 
-.days-calendar-container{
+.days-calendar-container {
     display: flex;
     flex-direction: column;
+    position: relative;
     cursor: pointer;
-    div{
+    > div {
         border-bottom: 1px solid black;
         border-right: 1px solid black;
-        padding: 0.5rem 5rem 5rem 0.5rem;
+        padding-left: 5px;
         font-weight: 700;
-        &:hover{
+        max-width: 200px;
+        &:hover {
             background-color: $calendarColor;
             color: white;
         }
     }
-
 }
 
-.color-weekend{
+.dayCalendar {
+    max-height: 90px;
+    margin-top: 10px;
+    overflow: hidden;
+    transition: opacity 20s ease-out;
+    &:hover {
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 5px;
+            height: 8px;
+            padding-top: 10px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: rgb(156, 155, 155);
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgb(156, 155, 155);
+        }
+    }
+}
+
+.eventTitle {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+    overflow: hidden;
+    font-weight: 700 !important;
+    color: rgb(141, 173, 221);
+    transition: 0.5s;
+    &:hover {
+        font-size: 16px;
+        color: white;
+    }
+}
+
+.color-weekend {
     color: $calendarColor;
     background-color: $bgColor;
 }
 
-.otherMonthNotWeekend{
+.otherMonthNotWeekend {
     color: $colorOtherMonth;
 }
 
-.currentMonth{
-    color:black;
+.currentMonth {
+    color: black;
 }
 
-.otherMonth{
+.otherMonth {
     color: $colorOtherMonth;
     background-color: $bgColor;
 }
 
-header{
+header {
     background-color: $calendarColor;
     color: white;
     font-weight: 600;
     display: flex;
-    span{
+    span {
         font-size: 16px;
         padding-left: 10px;
         padding-right: 20px;
     }
 }
 
-.data-calendar{
+.data-calendar {
     display: flex;
     flex-direction: column;
     max-width: 110px;
     min-width: 110px;
-    &:first-child{
+    &:first-child {
         border-left: 1px solid black;
     }
 }

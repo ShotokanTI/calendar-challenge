@@ -1,38 +1,94 @@
-import { Autocomplete, Input, TextField, Typography } from "@mui/material";
+import {
+  Event,
+  LocationOn,
+  Notifications,
+  QueryBuilder,
+} from "@mui/icons-material";
+import {
+  Autocomplete,
+  Button,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Stack } from "@mui/system";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { store } from "../../reducers";
+import { setEvent } from "../../reducers/dateReducer";
 
-export function FormMenu() {
-  const time = [];
-  const remindMeBefore = [
-    "Never",
-    "0 minutes before",
-    "5 minutes before",
-    "30 minutes before",
-    "1 hour before",
-    "12 hours before",
-    "1 day before",
-    "1 week before",
-  ];
+const remindMeBefore = [
+  "Never",
+  "0 minutes before",
+  "5 minutes before",
+  "30 minutes before",
+  "1 hour before",
+  "12 hours before",
+  "1 day before",
+  "1 week before",
+];
+export function FormMenu(props) {
+  const [onSubmit, setOnSubmit] = useState(false);
+  const [fromHour, setFromHour] = useState(null);
+  const [initialHour, setInitialHour] = useState([]);
+  const [finalHour, setFinalHour] = useState([]);
+  const [saveEvent, setSaveEvent] = useState({
+    eventName: "",
+    initialHour: "8:00:00 AM",
+    finalHour: "8:30:00 AM",
+    city: "",
+    remindMe: "",
+  });
 
-  useEffect(() => {
-    const date = new Date(new Date().setHours(0, 0, 0, 0));
+  function submitFormEvent() {
+    const allFilled = Object.values(saveEvent).every((value) => value);
+    if (allFilled) {
+      store.dispatch(setEvent(saveEvent));
+    }
+  }
+
+  function chosenDateTimeStampToLocaleDate(date) {
+    return new Date(new Date().setTime(date));
+  }
+
+  const pushHours = (
+    setCallback,
+    initialHour = new Date(new Date().setHours(0, 0, 0, 0))
+  ) => {
     const dateFuture = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + 1,
+      initialHour.getFullYear(),
+      initialHour.getMonth(),
+      initialHour.getDate() + 1,
       23,
       59,
       59
     );
-    while (date.toLocaleDateString() !== dateFuture.toLocaleDateString()) {
-      time.push({
-        label: date.toLocaleTimeString(),
-        period: date.toLocaleTimeString().split(" ")[1],
+    const hours = [];
+    while (
+      initialHour.toLocaleDateString() !== dateFuture.toLocaleDateString()
+    ) {
+      hours.push({
+        label: initialHour.toLocaleTimeString(),
+        period: initialHour.toLocaleTimeString().split(" ")[1],
+        timestamp: initialHour.getTime(),
       });
-      date.setMinutes(date.getMinutes() + 30);
+      initialHour.setMinutes(initialHour.getMinutes() + 30);
     }
+    setCallback(hours);
+  };
+
+  useEffect(() => {
+    const createHours = () => {
+      pushHours(setInitialHour);
+    };
+    createHours();
   }, []);
+
+  useEffect(() => {
+    if (fromHour) pushHours(setFinalHour, fromHour);
+  }, [fromHour]);
 
   return (
     <>
@@ -49,51 +105,122 @@ export function FormMenu() {
         margin={3}
         marginTop={2}
       >
-        <Input placeholder="Event Name"></Input>
+        <Stack direction="row" spacing={2}>
+          <Event></Event>
+          <Stack sx={{ width: "100%" }} spacing={1}>
+            <Input
+              onChange={(e) =>
+                setSaveEvent({ ...saveEvent, eventName: e.target.value })
+              }
+              sx={{ width: "100%" }}
+              placeholder="Event Name"
+              error={saveEvent.eventName === "" && onSubmit}
+            ></Input>
+            {saveEvent.eventName === "" && onSubmit && (
+              <Typography color="red" fontWeight="bold" fontSize={12}>
+                Event field is empty.
+              </Typography>
+            )}
+          </Stack>
+        </Stack>
         <Stack
           sx={{ width: "100%" }}
           spacing={2}
           direction="row"
           alignItems="end"
         >
+          <QueryBuilder></QueryBuilder>
           <Autocomplete
-            defaultValue={"8:00:00 AM"}
+            error={saveEvent.initialHour === "" && onSubmit}
+            value={saveEvent.initialHour}
             groupBy={(options) => options.period}
             sx={{ width: "100%" }}
-            options={time}
+            autoHighlight
+            options={initialHour}
             size="small"
+            onLoad={() => console.log("oi")}
+            onChange={(event, { timestamp, label }) => {
+              setFromHour(chosenDateTimeStampToLocaleDate(timestamp));
+              setSaveEvent({ ...saveEvent, initialHour: label });
+            }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Time" />
+              <TextField {...params} variant="standard" label="Initial Hour" />
             )}
           ></Autocomplete>
           <Typography variant="subtitle1">to</Typography>
           <Autocomplete
-            defaultValue={"8:30:00 AM"}
+            error={saveEvent.finalHour === "" && onSubmit}
+            value={saveEvent.finalHour}
             groupBy={(options) => options.period}
             sx={{ width: "100%" }}
             size="small"
-            options={time}
+            options={finalHour}
+            onChange={(event, { label }) => {
+              setSaveEvent({ ...saveEvent, finalHour: label });
+            }}
             renderInput={(params) => (
-              <TextField {...params} variant="standard" label="Time" />
+              <TextField {...params} variant="standard" label="Final Hour" />
             )}
           ></Autocomplete>
         </Stack>
-        <Input placeholder="Location/City"></Input>
-        <Stack height={20} alignItems="end" direction="row">
+        <Stack direction="row" spacing={2}>
+          <LocationOn></LocationOn>
+          <Stack sx={{ width: "100%" }} spacing={1} alignItems="start">
+            <Input
+              error={saveEvent.city === "" && onSubmit}
+              onChange={(event) => {
+                setSaveEvent({ ...saveEvent, city: event.target.value });
+              }}
+              sx={{ width: "100%" }}
+              placeholder="Location/City"
+            ></Input>
+            {saveEvent.city === "" && onSubmit && (
+              <Typography color="red" fontWeight="bold" fontSize={12}>
+                City field is empty.
+              </Typography>
+            )}
+          </Stack>
+        </Stack>
+        <Stack height={35} alignItems="center" direction="row" spacing={2}>
+          <Notifications></Notifications>
           <Typography variant="subtitle2">Remind me:</Typography>
-          <Autocomplete
-            sx={{ width: "200px", marginLeft: "10px" }}
-            options={remindMeBefore}
-            size="small"
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="standard"
-                label="12 hours before"
-              />
+          <Stack pt={1} spacing={1} alignItems="center">
+            <Select
+              error={saveEvent.remindMe === "" && onSubmit}
+              labelId="error-remind-label"
+              variant="standard"
+              onChange={(e) => {
+                setSaveEvent({ ...saveEvent, remindMe: e.target.value });
+              }}
+              sx={{ width: "200px", marginLeft: "5px" }}
+              size="small"
+            >
+              {remindMeBefore.map((item, key) => (
+                <MenuItem key={key} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+            {saveEvent.remindMe === "" && onSubmit && (
+              <Typography color="red" fontWeight="bold" fontSize={12}>
+                No item selected.
+              </Typography>
             )}
-          ></Autocomplete>
+          </Stack>
         </Stack>
+        <Button
+          onClick={() => {
+            setTimeout(() => {
+              props.handlerSaveEvent();
+            }, 500);
+            submitFormEvent();
+            setOnSubmit(true);
+          }}
+          variant="contained"
+          color="primary"
+        >
+          Save
+        </Button>
       </Stack>
     </>
   );
